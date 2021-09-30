@@ -1,0 +1,46 @@
+@import "~normalize.css/normalize.css";
+
+#paperCanvas {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+#appChrome .toolbox {
+    position: fixed;
+    width: 68px;
+    top: 48px;
+    left: 0;
+    bottom: 48px;
+
+    overflow-x:hidden;
+    overflow-y:auto;
+
+    text-align: center;
+}
+
+#appChrome .toolbox .buttongroup {
+    padding: 5px;
+}
+
+
+#appChrome .statusbar {
+    display: flex;
+    position: fixed;
+    height: 48px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#appChrome .statusbar .centerdisplay {
+    cursor: default;
+    padding: 15px 0;
+}
+
+#appChrome .statusbar .zoombox {
+    width: 6em;
+    margin: 5px;
+}
