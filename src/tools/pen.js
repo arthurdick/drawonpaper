@@ -25,8 +25,7 @@ function create() {
   }
 
   tool.onMouseDown = function (event) {
-    tool.maxDistance = options.size;
-    tool.minDistance = options.size / 2;
+    tool.minDistance = Math.max(options.size / 2, 1);
 
     path = new paper.Path();
     path.fillColor = options.color;
