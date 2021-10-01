@@ -8,6 +8,11 @@ import { undo } from "./undo.js";
 import paper from "paper";
 paper.install(window);
 
+document.getElementById("paperCanvas").addEventListener("pointerdown", () => {
+  // prevent focus from repeatedly opening virtual keyboard on tablet
+  document.activeElement.blur();
+});
+
 window.onload = function () {
   input.init();
   undo.init();
