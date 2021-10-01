@@ -3,7 +3,6 @@ import Paper from "@mui/material/Paper";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import IconButton from "@mui/material/IconButton";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import Popper from "@mui/material/Popper";
 import { RgbaStringColorPicker } from "react-colorful";
 import FormGroup from "@mui/material/FormGroup";
@@ -139,84 +138,102 @@ class ToolSettings extends React.Component {
 
   render() {
     let sx = { padding: "15px" };
-    let colorOption =
-      activeTool && activeTool.options.hasOwnProperty("color") ? (
-        <>
-          <IconButton onClick={this.pickerClick}>
-            <PaletteIcon sx={{ color: activeTool.options.color }} />
-          </IconButton>
-          <Popper
-            open={Boolean(pickerEl)}
-            anchorEl={pickerEl}
-            placement="right"
-          >
-            <Paper sx={sx}>
-              <RgbaStringColorPicker
-                color={activeTool.options.color || "black"}
-                onChange={setColor}
-              />
-            </Paper>
-          </Popper>
-        </>
-      ) : null;
 
-    let sizeOption =
-      activeTool && activeTool.options.hasOwnProperty("size") ? (
-        <>
-          <IconButton onClick={this.settingsClick}>
-            <SettingsIcon />
-          </IconButton>
-          <Popper
-            open={Boolean(settingsEl)}
-            anchorEl={settingsEl}
-            placement="right"
-          >
-            <Paper sx={sx}>
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={activeTool && activeTool.options.pressure}
-                      onChange={this.setUsePressure}
+    let toolHasColor = activeTool && activeTool.options.hasOwnProperty("color");
+    let toolHasSize = activeTool && activeTool.options.hasOwnProperty("size");
+
+    let colorOption = null;
+    let colorPopper = null;
+
+    if (toolHasColor) {
+      colorOption = (
+        <ToggleButton value="color" onClick={this.pickerClick}>
+          <PaletteIcon sx={{ color: activeTool.options.color }} />
+        </ToggleButton>
+      );
+      colorPopper = (
+        <Popper open={Boolean(pickerEl)} anchorEl={pickerEl} placement="right">
+          <Paper sx={sx}>
+            <RgbaStringColorPicker
+              color={activeTool.options.color || "black"}
+              onChange={setColor}
+            />
+          </Paper>
+        </Popper>
+      );
+    }
+
+    let sizeOption = null;
+    let sizePopper = null;
+    if (toolHasSize) {
+      sizeOption = (
+        <ToggleButton value="size" onClick={this.settingsClick}>
+          <SettingsIcon />
+        </ToggleButton>
+      );
+
+      sizePopper = (
+        <Popper
+          open={Boolean(settingsEl)}
+          anchorEl={settingsEl}
+          placement="right"
+        >
+          <Paper sx={sx}>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={activeTool && activeTool.options.pressure}
+                    onChange={this.setUsePressure}
+                  />
+                }
+                label="Use Pen Pressure"
+              />
+              <FormControlLabel
+                control={
+                  <>
+                    <Slider
+                      min={1}
+                      max={30}
+                      value={activeTool && activeTool.options.size}
+                      onChange={this.setPenSizeSlider}
                     />
-                  }
-                  label="Use Pen Pressure"
-                />
-                <FormControlLabel
-                  control={
-                    <>
-                      <Slider
-                        min={1}
-                        max={30}
-                        value={activeTool && activeTool.options.size}
-                        onChange={this.setPenSizeSlider}
-                      />
-                      <Input
-                        sx={{ width: "5em" }}
-                        value={activeTool && activeTool.options.size}
-                        size="small"
-                        onChange={this.setPenSizeInput}
-                        inputProps={{ type: "number", min: 1, max: 30 }}
-                      />
-                    </>
-                  }
-                  label="Tool Size"
-                />
-              </FormGroup>
-            </Paper>
-          </Popper>
-        </>
-      ) : null;
+                    <Input
+                      sx={{ width: "5em" }}
+                      value={activeTool && activeTool.options.size}
+                      size="small"
+                      onChange={this.setPenSizeInput}
+                      inputProps={{ type: "number", min: 1, max: 30 }}
+                    />
+                  </>
+                }
+                label="Tool Size"
+              />
+            </FormGroup>
+          </Paper>
+        </Popper>
+      );
+    }
+
+    let open = [];
+    pickerEl && open.push("color");
+    settingsEl && open.push("size");
 
     return colorOption || sizeOption ? (
-      <ButtonGroup
-        className="buttongroup"
-        orientation="vertical"
-        variant="contained"
-      >
-        {colorOption}
-        {sizeOption}
-      </ButtonGroup>
+      <>
+        <ToggleButtonGroup
+          value={open}
+          className="buttongroup"
+          orientation="vertical"
+          variant="contained"
+        >
+          {colorOption}
+          {sizeOption}
+        </ToggleButtonGroup>
+
+        {colorPopper}
+        {sizePopper}
+      </>
     ) : null;
   }
 }
