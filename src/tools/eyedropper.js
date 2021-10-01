@@ -11,6 +11,7 @@ let options = {
 let paperTool;
 function create() {
   let tool = new paper.Tool();
+  tool.maxDistance = 1;
 
   tool.onMouseDown = function (event) {
     let hitResult = paper.project.hitTest(event.point, { fill: true });
