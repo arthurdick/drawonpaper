@@ -10,17 +10,19 @@ let paperTool;
 function create() {
   let tool = new paper.Tool();
 
+  let hitOptions;
+  
   let dragging = false;
 
-  let startRef;
+  let startPosition;
 
   tool.onMouseDown = function (event) {
-    let hitOptions = {
-      segments: true,
-      stroke: true,
-      curves: true,
+    hitOptions = {
       fill: true,
-      guide: false,
+      stroke: false,
+      segments: false,
+      curves: false,
+      guides: false,
       tolerance: 8 / paper.view.zoom,
     };
 
@@ -28,12 +30,12 @@ function create() {
     dragging = hitTest && hitTest.item.selected;
 
     if (dragging) {
-      startRef = {};
+      startPosition = {};
       paper.project.selectedItems.forEach((selectedItem) => {
         if (selectedItem.parent != paper.project.activeLayer) {
           selectedItem = selectedItem.parent;
         }
-        startRef[selectedItem.index] = selectedItem.position;
+        startPosition[selectedItem.index] = selectedItem.position;
       });
     }
   };
@@ -52,7 +54,7 @@ function create() {
       dragging = false;
 
       let layerIndex = paper.project.activeLayer.index;
-      let actionStart = startRef;
+      let actionStart = startPosition;
       let actionEnd = {};
 
       paper.project.selectedItems.forEach((selectedItem) => {
@@ -82,15 +84,6 @@ function create() {
 
       return;
     }
-
-    let hitOptions = {
-      segments: true,
-      stroke: true,
-      curves: true,
-      fill: true,
-      guide: false,
-      tolerance: 8 / paper.view.zoom,
-    };
 
     let hitTest = paper.project.activeLayer.hitTest(event.point, hitOptions);
     if (!hitTest || !event.modifiers.shift) {
