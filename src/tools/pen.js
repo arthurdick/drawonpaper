@@ -13,35 +13,54 @@ let options = {
 
 let paperTool;
 function create() {
-  let path;
   let tool = new paper.Tool();
-  tool.minDistance = 1;
+
+  let path;
+  let lastPoint;
+
+  function addCap(point, delta) {
+    delta.length = options.size;
+    let capPoint = point.add(delta);
+    path.add(capPoint);
+  }
 
   tool.onMouseDown = function (event) {
+    tool.maxDistance = options.size;
+    tool.minDistance = options.size / 2;
+
     path = new paper.Path();
     path.fillColor = options.color;
 
-    path.add(event.point);
+    lastPoint = undefined;
   };
 
   tool.onMouseDrag = function (event) {
-    let step = new paper.Point(event.delta).normalize(
-      input.getPressure(options.pressure) * options.size
-    );
-    step.angle += 90;
+    if (event.count == 0) {
+      addCap(event.middlePoint, event.delta.multiply(-1));
+    } else {
+      let step = new paper.Point(event.delta).normalize(
+        input.getPressure(options.pressure) * options.size
+      );
+      step.angle += 90;
 
-    let top = new paper.Point(event.middlePoint).add(step);
-    let bottom = new paper.Point(event.middlePoint).subtract(step);
-
-    path.add(top);
-    path.insert(0, bottom);
-    path.smooth();
+      let top = new paper.Point(event.middlePoint).add(step);
+      let bottom = new paper.Point(event.middlePoint).subtract(step);
+      path.add(top);
+      path.insert(0, bottom);
+      path.smooth();
+    }
+    lastPoint = event.middlePoint;
   };
 
   tool.onMouseUp = function (event) {
-    path.add(event.point);
-    path.closed = true;
-    path.smooth();
+    if (!lastPoint) {
+      path = paper.Path.Circle(new paper.Point(event.point), options.size / 2);
+      path.fillColor = options.color;
+    } else {
+      addCap(event.point, event.point.subtract(lastPoint));
+      path.closed = true;
+      path.smooth();
+    }
 
     let layerIndex = paper.project.activeLayer.index;
     let pathIndex = path.index;
