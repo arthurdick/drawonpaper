@@ -17,6 +17,7 @@ module.exports = {
     "plugins": [
         "react"
     ],
+    "ignorePatterns": ["dist/", "node_modules/"],
     "rules": {
     }
 };
