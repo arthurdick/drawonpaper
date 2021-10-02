@@ -1,16 +1,19 @@
-# DrawOnPaper Sketching App
+# Draw On Paper
 
-Inspired by https://github.com/w00dn/papergrapher
+Vector sketching app inspired by [Papergrapher](https://github.com/w00dn/papergrapher).
+
+Try it at https://drawonpaper.com
 
 
 Development
 -----------
 
-`npm install`
-`npm start`
+After checkout install the dependencies with `npm install`
+
+Start the development server with `npm start`
 
 
-Build Production
+Production Build
 ----------------
 
 `npm run build`
