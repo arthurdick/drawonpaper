@@ -2,7 +2,6 @@ import React from "react";
 import Paper from "@mui/material/Paper";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import IconButton from "@mui/material/IconButton";
 import Popper from "@mui/material/Popper";
 import { RgbaStringColorPicker } from "react-colorful";
 import FormGroup from "@mui/material/FormGroup";
@@ -132,7 +131,10 @@ class ToolSettings extends React.Component {
   }
 
   setPenSizeInput(e) {
-    activeTool.options.size = Number(event.target.value);
+    let value = Number(event.target.value);
+    if (value > 0 && value < 1000) {
+      activeTool.options.size = value;
+    }
     chrome.triggerRender();
   }
 
@@ -194,7 +196,7 @@ class ToolSettings extends React.Component {
                   <>
                     <Slider
                       min={1}
-                      max={30}
+                      max={50}
                       value={activeTool && activeTool.options.size}
                       onChange={this.setPenSizeSlider}
                     />
@@ -203,7 +205,7 @@ class ToolSettings extends React.Component {
                       value={activeTool && activeTool.options.size}
                       size="small"
                       onChange={this.setPenSizeInput}
-                      inputProps={{ type: "number", min: 1, max: 30 }}
+                      inputProps={{ type: "number", min: 1, max: 50, step: 1 }}
                     />
                   </>
                 }

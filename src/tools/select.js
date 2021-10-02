@@ -11,7 +11,7 @@ function create() {
   let tool = new paper.Tool();
 
   let hitOptions;
-  
+
   let dragging = false;
 
   let startPosition;

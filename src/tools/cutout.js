@@ -12,7 +12,7 @@ let paperTool;
 function create() {
   let path;
   let tool = new paper.Tool();
-  tool.minDistance = 0.5;
+  tool.minDistance = 1;
 
   tool.onMouseDown = function (event) {
     path = new paper.Path();

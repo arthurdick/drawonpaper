@@ -14,6 +14,7 @@ let options = {
 let paperTool;
 function create() {
   let tool = new paper.Tool();
+  tool.minDistance = 1;
 
   let path;
   let lastPoint;
@@ -25,8 +26,6 @@ function create() {
   }
 
   tool.onMouseDown = function (event) {
-    tool.minDistance = Math.max(options.size / 2, 1);
-
     path = new paper.Path();
     path.fillColor = options.color;
 
