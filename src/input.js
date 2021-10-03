@@ -212,8 +212,7 @@ function uploadReference() {
         let command = {
           src: "reference",
           redo: function () {
-            let item = paper.project.layers[layerIndex].importJSON(json);
-            item.sendToBack();
+            paper.project.layers[layerIndex].importJSON(json);
           },
           undo: function () {
             paper.project.layers[layerIndex].children[rasterIndex].remove();
