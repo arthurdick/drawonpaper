@@ -20,7 +20,7 @@ function create() {
   let lastPoint;
 
   function addCap(point, delta) {
-    delta.length = options.size;
+    delta.length = options.size / 3;
     let capPoint = point.add(delta);
     path.add(capPoint);
   }
