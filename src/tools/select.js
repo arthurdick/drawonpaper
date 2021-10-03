@@ -90,7 +90,7 @@ function create() {
     }
 
     let hitTest = paper.project.activeLayer.hitTest(event.point, hitOptions);
-    if (!hitTest || !event.modifiers.shift) {
+    if (!hitTest) {
       paper.project.deselectAll();
     }
 
