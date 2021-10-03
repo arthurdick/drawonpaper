@@ -66,6 +66,7 @@ function activateTool(toolSlug) {
 
   pickerEl = undefined;
   settingsEl = undefined;
+  actionsEl = undefined;
 
   if (eyedropperTool.options.color && activeTool.options.color) {
     activeTool.options.color = eyedropperTool.options.color;
@@ -254,7 +255,16 @@ class ToolSettings extends React.Component {
           onClose={this.actionsClick}
         >
           {Object.keys(actions).map((action) => {
-            return <MenuItem onClick={actions[action]}>{action}</MenuItem>;
+            return (
+              <MenuItem
+                onClick={() => {
+                  actions[action]();
+                  actionsEl = undefined;
+                }}
+              >
+                {action}
+              </MenuItem>
+            );
           })}
         </Menu>
       );
