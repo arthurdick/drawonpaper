@@ -1,10 +1,13 @@
+import { input } from "../input.js";
 import { undo } from "../undo.js";
+import { chrome } from "../chrome.js";
 
 import paper from "paper";
 
 const slug = "select";
 
 let options = {};
+let actions = {};
 
 let paperTool;
 function create() {
@@ -18,7 +21,7 @@ function create() {
 
   tool.onMouseDown = function (event) {
     hitOptions = {
-      "class": paper.Path,
+      class: paper.Path,
       fill: true,
       stroke: false,
       segments: false,
@@ -94,6 +97,9 @@ function create() {
     if (hitTest) {
       hitTest.item.selected = !hitTest.item.selected;
     }
+
+    setupActions();
+    chrome.triggerRender();
   };
 
   paperTool = tool;
@@ -103,9 +109,27 @@ function activate() {
   paperTool.activate();
 }
 
+function setupActions() {
+  if (paper.project.selectedItems.length) {
+    actions = {
+      Delete: () => {
+        input.deleteSelectedItems();
+        setupActions();
+      },
+    };
+  } else {
+    actions = {};
+  }
+}
+
+function getAvailableActions() {
+  return actions;
+}
+
 export const selectTool = {
   slug: slug,
   options: options,
   create: create,
   activate: activate,
+  getAvailableActions: getAvailableActions,
 };

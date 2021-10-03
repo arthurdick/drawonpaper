@@ -87,10 +87,12 @@ function deleteSelectedItems() {
   let command = {
     src: "delete",
     redo: function () {
-      Object.keys(json).forEach((key) => {
-        let item = paper.project.layers[layerIndex].children[key];
-        item.remove();
-      });
+      Object.keys(json)
+        .reverse()
+        .forEach((key) => {
+          let item = paper.project.layers[layerIndex].children[key];
+          item.remove();
+        });
     },
     undo: function () {
       Object.keys(json).forEach((key) => {
@@ -234,4 +236,5 @@ export const input = {
   importDocument: importDocument,
   createNewDocument: createNewDocument,
   uploadReference: uploadReference,
+  deleteSelectedItems: deleteSelectedItems,
 };

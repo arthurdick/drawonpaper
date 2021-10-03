@@ -18,8 +18,12 @@ import FormatPaint from "@mui/icons-material/FormatPaint";
 import Eyedropper from "@mui/icons-material/Colorize";
 import PaletteIcon from "@mui/icons-material/Palette";
 import SettingsIcon from "@mui/icons-material/Settings";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Eraser from "mdi-material-ui/Eraser";
 import CursorDefault from "mdi-material-ui/CursorDefault";
+
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 import paper from "paper";
 
@@ -99,6 +103,7 @@ function setPointer(pointerName) {
 
 let pickerEl;
 let settingsEl;
+let actionsEl;
 
 class ToolSettings extends React.Component {
   pickerClick(event) {
@@ -116,6 +121,15 @@ class ToolSettings extends React.Component {
       settingsEl = event.currentTarget;
     } else {
       settingsEl = undefined;
+    }
+    chrome.triggerRender();
+  }
+
+  actionsClick(event) {
+    if (!actionsEl) {
+      actionsEl = event.currentTarget;
+    } else {
+      actionsEl = undefined;
     }
     chrome.triggerRender();
   }
@@ -143,6 +157,10 @@ class ToolSettings extends React.Component {
 
     let toolHasColor = activeTool && activeTool.options.hasOwnProperty("color");
     let toolHasSize = activeTool && activeTool.options.hasOwnProperty("size");
+    let toolHasActions =
+      activeTool &&
+      activeTool.getAvailableActions &&
+      Object.keys(activeTool.getAvailableActions()).length;
 
     let colorOption = null;
     let colorPopper = null;
@@ -217,11 +235,37 @@ class ToolSettings extends React.Component {
       );
     }
 
+    let actionsOption = null;
+    let actionsPopper = null;
+
+    if (toolHasActions) {
+      let actions = activeTool.getAvailableActions();
+      actionsOption = (
+        <ToggleButton value="action" onClick={this.actionsClick}>
+          <MoreVertIcon />
+        </ToggleButton>
+      );
+
+      actionsPopper = (
+        <Menu
+          id="actions-menu"
+          anchorEl={actionsEl}
+          open={Boolean(actionsEl)}
+          onClose={this.actionsClick}
+        >
+          {Object.keys(actions).map((action) => {
+            return <MenuItem onClick={actions[action]}>{action}</MenuItem>;
+          })}
+        </Menu>
+      );
+    }
+
     let open = [];
     pickerEl && open.push("color");
     settingsEl && open.push("size");
+    actionsEl && open.push("actions");
 
-    return colorOption || sizeOption ? (
+    return colorOption || sizeOption || actionsOption ? (
       <>
         <ToggleButtonGroup
           value={open}
@@ -231,10 +275,12 @@ class ToolSettings extends React.Component {
         >
           {colorOption}
           {sizeOption}
+          {actionsOption}
         </ToggleButtonGroup>
 
         {colorPopper}
         {sizePopper}
+        {actionsPopper}
       </>
     ) : null;
   }
