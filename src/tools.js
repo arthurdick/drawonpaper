@@ -257,6 +257,7 @@ class ToolSettings extends React.Component {
           {Object.keys(actions).map((action) => {
             return (
               <MenuItem
+                key={action}
                 onClick={() => {
                   actions[action]();
                   actionsEl = undefined;

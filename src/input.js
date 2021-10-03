@@ -87,17 +87,19 @@ function deleteSelectedItems() {
   let command = {
     src: "delete",
     redo: function () {
-      Object.keys(json)
-        .reverse()
-        .forEach((key) => {
-          let item = paper.project.layers[layerIndex].children[key];
-          item.remove();
-        });
+      let removed = [];
+      Object.keys(json).forEach((key) => {
+        removed.push(paper.project.layers[layerIndex].children[key]);
+      });
+      removed.forEach((item) => {
+        item.remove();
+      });
     },
     undo: function () {
       Object.keys(json).forEach((key) => {
-        let item = paper.project.layers[layerIndex].importJSON(json[key]);
-        paper.project.layers[layerIndex].insertChild(json[key], item);
+        key = Number(key);
+        let item = paper.project.importJSON(json[key]);
+        paper.project.layers[layerIndex].insertChild(key, item);
       });
     },
   };
