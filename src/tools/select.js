@@ -18,6 +18,7 @@ function create() {
 
   tool.onMouseDown = function (event) {
     hitOptions = {
+      "class": paper.Path,
       fill: true,
       stroke: false,
       segments: false,
