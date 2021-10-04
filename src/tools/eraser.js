@@ -61,8 +61,11 @@ function create() {
     });
 
     let erasePath = path.exportJSON();
-
     path.remove();
+
+    if( !changed.length ) { //nothing was erased
+      return;
+    }
 
     let command = {
       src: slug,
