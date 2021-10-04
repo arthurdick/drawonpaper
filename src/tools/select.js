@@ -9,28 +9,36 @@ const slug = "select";
 let options = {};
 let actions = {};
 
+function doHitTest(point) {
+  let hitOptions = {
+    class: paper.Path,
+    fill: true,
+    stroke: false,
+    segments: false,
+    curves: false,
+    guides: false,
+    tolerance: 8 / paper.view.zoom,
+  };
+
+  let result = paper.project.activeLayer.hitTest(point, hitOptions);
+  if (result) {
+    return result;
+  }
+
+  hitOptions.class = paper.Raster;
+  return paper.project.activeLayer.hitTest(point, hitOptions);
+}
+
 let paperTool;
 function create() {
   let tool = new paper.Tool();
-
-  let hitOptions;
 
   let dragging = false;
 
   let startPosition;
 
   tool.onMouseDown = function (event) {
-    hitOptions = {
-      class: paper.Path,
-      fill: true,
-      stroke: false,
-      segments: false,
-      curves: false,
-      guides: false,
-      tolerance: 8 / paper.view.zoom,
-    };
-
-    let hitTest = paper.project.activeLayer.hitTest(event.point, hitOptions);
+    let hitTest = doHitTest(event.point);
     dragging = hitTest && hitTest.item.selected;
 
     if (dragging) {
@@ -57,44 +65,43 @@ function create() {
     if (dragging) {
       dragging = false;
 
-      let layerIndex = paper.project.activeLayer.index;
-      let actionStart = startPosition;
-      let actionEnd = {};
+      if (event.delta.x || event.delta.y) {
+        let layerIndex = paper.project.activeLayer.index;
+        let actionStart = startPosition;
+        let actionEnd = {};
 
-      paper.project.selectedItems.forEach((selectedItem) => {
-        if (selectedItem.parent != paper.project.activeLayer) {
-          selectedItem = selectedItem.parent;
-        }
-        actionEnd[selectedItem.index] = selectedItem.position;
-      });
+        paper.project.selectedItems.forEach((selectedItem) => {
+          if (selectedItem.parent != paper.project.activeLayer) {
+            selectedItem = selectedItem.parent;
+          }
+          actionEnd[selectedItem.index] = selectedItem.position;
+        });
 
-      let command = {
-        src: slug + "-move",
-        redo: function () {
-          Object.keys(actionStart).forEach((key) => {
-            paper.project.layers[layerIndex].children[key].position =
-              actionEnd[key];
-          });
-        },
-        undo: function () {
-          Object.keys(actionStart).forEach((key) => {
-            paper.project.layers[layerIndex].children[key].position =
-              actionStart[key];
-          });
-        },
-      };
+        let command = {
+          src: slug + "-move",
+          redo: function () {
+            Object.keys(actionStart).forEach((key) => {
+              paper.project.layers[layerIndex].children[key].position =
+                actionEnd[key];
+            });
+          },
+          undo: function () {
+            Object.keys(actionStart).forEach((key) => {
+              paper.project.layers[layerIndex].children[key].position =
+                actionStart[key];
+            });
+          },
+        };
 
-      undo.addCommand(command);
-
-      return;
+        undo.addCommand(command);
+        return;
+      }
     }
 
-    let hitTest = paper.project.activeLayer.hitTest(event.point, hitOptions);
+    let hitTest = doHitTest(event.point);
     if (!hitTest) {
       paper.project.deselectAll();
-    }
-
-    if (hitTest) {
+    } else {
       hitTest.item.selected = !hitTest.item.selected;
     }
 
