@@ -62,6 +62,7 @@ function pasteClipboard() {
   clipboard.forEach((json) => {
     paper.project.activeLayer.importJSON(json);
   });
+  chrome.triggerRender();
 }
 
 function onKeyDown(event) {

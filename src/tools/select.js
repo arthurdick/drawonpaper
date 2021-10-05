@@ -7,7 +7,6 @@ import paper from "paper";
 const slug = "select";
 
 let options = {};
-let actions = {};
 
 function doHitTest(point) {
   let hitOptions = {
@@ -105,7 +104,6 @@ function create() {
       hitTest.item.selected = !hitTest.item.selected;
     }
 
-    setupActions();
     chrome.triggerRender();
   };
 
@@ -116,20 +114,13 @@ function activate() {
   paperTool.activate();
 }
 
-function setupActions() {
+function getActions() {
+  let actions = {};
   if (paper.project.selectedItems.length) {
-    actions = {
-      Delete: () => {
-        input.deleteSelectedItems();
-        setupActions();
-      },
+    actions["Delete"] = () => {
+      input.deleteSelectedItems();
     };
-  } else {
-    actions = {};
   }
-}
-
-function getAvailableActions() {
   return actions;
 }
 
@@ -138,5 +129,5 @@ export const selectTool = {
   options: options,
   create: create,
   activate: activate,
-  getAvailableActions: getAvailableActions,
+  getActions: getActions,
 };

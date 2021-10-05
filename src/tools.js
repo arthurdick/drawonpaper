@@ -160,8 +160,8 @@ class ToolSettings extends React.Component {
     let toolHasSize = activeTool && activeTool.options.hasOwnProperty("size");
     let toolHasActions =
       activeTool &&
-      activeTool.getAvailableActions &&
-      Object.keys(activeTool.getAvailableActions()).length;
+      activeTool.getActions &&
+      Object.keys(activeTool.getActions()).length;
 
     let colorOption = null;
     let colorPopper = null;
@@ -240,7 +240,7 @@ class ToolSettings extends React.Component {
     let actionsPopper = null;
 
     if (toolHasActions) {
-      let actions = activeTool.getAvailableActions();
+      let actions = activeTool.getActions();
       actionsOption = (
         <ToggleButton value="action" onClick={this.actionsClick}>
           <MoreVertIcon />
