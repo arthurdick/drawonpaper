@@ -59,9 +59,29 @@ function copySelection() {
 }
 
 function pasteClipboard() {
+  let activeLayer = paper.project.activeLayer.index;
+  let pasted = [];
   clipboard.forEach((json) => {
-    paper.project.activeLayer.importJSON(json);
+    pasted.push( json );
   });
+
+  let command = {
+    src: "paste-clipboard",
+    redo: function () {
+      pasted.forEach((json) => {
+	paper.project.layers[activeLayer].importJSON(json);
+      });
+    },
+    undo: function () {
+      let count = pasted.length;
+      for( let i=count; i>0; i-- ) {
+	paper.project.layers[activeLayer].lastChild.remove();
+      }
+    },
+  };
+  
+  undo.addCommand(command);
+  
   chrome.triggerRender();
 }
 
