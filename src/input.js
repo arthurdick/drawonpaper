@@ -12,6 +12,8 @@ let canvas;
 
 let penPressure = 0.5;
 
+let clipboard = [];
+
 function init() {
   canvas = document.getElementById("paperCanvas");
 
@@ -49,6 +51,19 @@ function resetZoom() {
   setZoom(1);
 }
 
+function copySelection() {
+  clipboard = [];
+  paper.project.selectedItems.forEach((item) => {
+    clipboard.push(item.exportJSON());
+  });
+}
+
+function pasteClipboard() {
+  clipboard.forEach((json) => {
+    paper.project.activeLayer.importJSON(json);
+  });
+}
+
 function onKeyDown(event) {
   if (event.target.tagName === "INPUT") {
     return;
@@ -69,6 +84,14 @@ function onKeyDown(event) {
     case "Backspace":
     case "Delete":
       deleteSelectedItems();
+      break;
+    case "c":
+    case "C":
+      copySelection();
+      break;
+    case "v":
+    case "V":
+      pasteClipboard();
       break;
   }
 }

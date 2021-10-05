@@ -63,7 +63,8 @@ function create() {
     let erasePath = path.exportJSON();
     path.remove();
 
-    if( !changed.length ) { //nothing was erased
+    if (!changed.length) {
+      //nothing was erased
       return;
     }
 
