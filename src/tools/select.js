@@ -34,19 +34,21 @@ function create() {
 
   let dragging = false;
 
-  let startPosition;
+  let selectedPaths;
 
   tool.onMouseDown = function (event) {
     let hitTest = doHitTest(event.point);
     dragging = hitTest && hitTest.item.selected;
 
     if (dragging) {
-      startPosition = {};
+      selectedPaths = [];
       paper.project.selectedItems.forEach((selectedItem) => {
-        if (selectedItem.parent != paper.project.activeLayer) {
+        let selectedPath = [selectedItem.index];
+        while (selectedItem.parent != paper.project.activeLayer) {
           selectedItem = selectedItem.parent;
+          selectedPath.unshift(selectedItem.index);
         }
-        startPosition[selectedItem.index] = selectedItem.position;
+        selectedPaths.push(selectedPath);
       });
     }
   };
@@ -66,28 +68,32 @@ function create() {
 
       if (event.delta.x || event.delta.y) {
         let layerIndex = paper.project.activeLayer.index;
-        let actionStart = startPosition;
-        let actionEnd = {};
+        let paths = selectedPaths;
+        let delta = event.delta;
 
-        paper.project.selectedItems.forEach((selectedItem) => {
-          if (selectedItem.parent != paper.project.activeLayer) {
-            selectedItem = selectedItem.parent;
-          }
-          actionEnd[selectedItem.index] = selectedItem.position;
+        paper.project.selectedItems.forEach((item) => {
+          let reverse = new paper.Point(0, 0).subtract(delta);
+          item.translate(reverse);
         });
 
         let command = {
           src: slug + "-move",
           redo: function () {
-            Object.keys(actionStart).forEach((key) => {
-              paper.project.layers[layerIndex].children[key].position =
-                actionEnd[key];
+            paths.forEach((path) => {
+              let item = paper.project.layers[layerIndex];
+              path.forEach((index) => {
+                item = item.children[index];
+              });
+              item.translate(delta);
             });
           },
           undo: function () {
-            Object.keys(actionStart).forEach((key) => {
-              paper.project.layers[layerIndex].children[key].position =
-                actionStart[key];
+            paths.forEach((path) => {
+              let item = paper.project.layers[layerIndex];
+              path.forEach((index) => {
+                item = item.children[index];
+              });
+              item.translate(new paper.Point(0, 0).subtract(delta));
             });
           },
         };

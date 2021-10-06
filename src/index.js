@@ -6,6 +6,7 @@ import { input } from "./input.js";
 import { undo } from "./undo.js";
 
 import paper from "paper";
+//paper.settings.applyMatrix = false;
 paper.install(window);
 
 document.getElementById("paperCanvas").addEventListener("pointerdown", () => {
