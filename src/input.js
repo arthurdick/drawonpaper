@@ -152,13 +152,6 @@ function deleteSelectedItems() {
 }
 
 function createNewDocument() {
-  if (
-    !undo.isSaved() &&
-    !confirm("There are unsaved changes. Clear the document permanently?")
-  ) {
-    return;
-  }
-
   paper.project.clear();
   layers.addNewLayer();
 
@@ -179,15 +172,6 @@ function exportDocument() {
 }
 
 function importDocument() {
-  if (
-    !undo.isSaved() &&
-    !confirm(
-      "There are unsaved changes. Replace the current document permanently?"
-    )
-  ) {
-    return;
-  }
-
   let fileIn = document.createElement("input");
   fileIn.type = "file";
   fileIn.accept = EXPORT_EXTENSION;
@@ -207,6 +191,7 @@ function importDocument() {
         resetZoom();
 
         undo.init();
+        chrome.triggerRender();
       },
       false
     );

@@ -1,4 +1,5 @@
 import { input } from "./input.js";
+import { undo } from "./undo.js";
 
 import "@fontsource/roboto";
 
@@ -21,6 +22,13 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+
 import LayersIcon from "@mui/icons-material/Layers";
 import MenuIcon from "@mui/icons-material/Menu";
 
@@ -31,9 +39,24 @@ import { ToolBox } from "./tools.js";
 import { LayerDrawer } from "./layers.js";
 import { TextField, Zoom } from "@mui/material";
 
-function resetCanvas() {
-  input.createNewDocument();
+function resetCanvas(e, confirmed) {
   closeTopMenu();
+
+  if (confirmed) {
+    confirmAction = null;
+  } else if (!undo.isSaved()) {
+    confirmAction = {
+      title: "Unsaved Changes",
+      message: "There are unsaved changes. Clear the document permanently?",
+      action: () => {
+        resetCanvas(e, true);
+      },
+    };
+    renderAppChrome();
+    return;
+  }
+
+  input.createNewDocument();
   renderAppChrome();
 }
 function uploadReference() {
@@ -44,12 +67,31 @@ function exportDoc() {
   closeTopMenu();
   input.exportDocument();
 }
-function importDoc() {
+function importDoc(e, confirmed) {
   closeTopMenu();
+
+  if (confirmed) {
+    confirmAction = null;
+  } else if (!undo.isSaved()) {
+    confirmAction = {
+      title: "Unsaved Changes",
+      message:
+        "There are unsaved changes. Replace the current document permanently?",
+      action: () => {
+        importDoc(e, true);
+      },
+    };
+    renderAppChrome();
+    return;
+  }
+
   input.importDocument();
+  renderAppChrome();
 }
 
 //////////////////////
+
+let confirmAction = null;
 
 let menuEl = null;
 function TopMenu(props) {
@@ -90,6 +132,25 @@ function TopMenu(props) {
           <LayersIcon />
         </IconButton>
       </Toolbar>
+      <Dialog open={Boolean(confirmAction)}>
+        <DialogTitle>{confirmAction && confirmAction.title}</DialogTitle>
+        <DialogContent dividers>
+          <DialogContentText>
+            {confirmAction && confirmAction.message}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={confirmAction && confirmAction.action}>OK</Button>
+          <Button
+            onClick={() => {
+              confirmAction = null;
+              renderAppChrome();
+            }}
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </AppBar>
   );
 }
@@ -144,7 +205,7 @@ function AppChrome(props) {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <TopMenu canUndo={props.canUndo} canRedo={props.canRedo} />
+        <TopMenu />
         <StatusBar />
         <ToolBox />
         <LayerDrawer open={layersPanelOpen} onClose={toggleLayers} />
