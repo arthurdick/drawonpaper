@@ -20,7 +20,7 @@
     "url": "https://github.com/arthurdick/drawonpaper/issues"
   },
   "homepage": "https://drawonpaper.com",
-    "engines": {
+  "engines": {
     "node": ">=14.0.0",
     "npm": ">=6.0.0"
   },
@@ -44,7 +44,6 @@
   "devDependencies": {
     "@babel/core": "^7.15.5",
     "@babel/preset-react": "^7.14.5",
-    "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
     "css-loader": "^6.3.0",
     "eslint": "^7.32.0",
