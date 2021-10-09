@@ -103,7 +103,7 @@ function setPointer(pointerName) {
 /////////////////////////////////////////////
 
 function objectHasKey(obj, key) {
-  if( !obj || typeof obj != "object") {
+  if (!obj || typeof obj != "object") {
     return false;
   }
   return Object.prototype.hasOwnProperty.call(obj, key);

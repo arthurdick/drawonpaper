@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import IconButton from "@mui/material/IconButton";
 import ToggleButton from "@mui/material/ToggleButton";
@@ -252,6 +253,11 @@ export class LayerDrawer extends React.Component {
     );
   }
 }
+
+LayerDrawer.propTypes = {
+  open: PropTypes.bool,
+  onClose: PropTypes.func,
+};
 
 export const layers = {
   addNewLayer: addNewLayer,

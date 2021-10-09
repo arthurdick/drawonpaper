@@ -25,7 +25,7 @@ function create() {
     path.add(capPoint);
   }
 
-  tool.onMouseDown = function (event) {
+  tool.onMouseDown = function () {
     path = new paper.Path();
     path.fillColor = options.color;
 

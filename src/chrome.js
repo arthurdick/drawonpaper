@@ -214,7 +214,6 @@ function AppChrome() {
 
 const theme = createTheme();
 
-
 function renderAppChrome() {
   ReactDOM.render(<AppChrome />, document.getElementById("appChrome"));
 }

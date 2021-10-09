@@ -16,7 +16,7 @@ function create() {
   let tool = new paper.Tool();
   tool.maxDistance = 1;
 
-  tool.onMouseDown = function (event) {
+  tool.onMouseDown = function () {
     selected = {};
     toColor = options.color;
   };
@@ -33,7 +33,7 @@ function create() {
     }
   };
 
-  tool.onMouseUp = function (event) {
+  tool.onMouseUp = function () {
     if (Object.keys(selected).length < 1) {
       return;
     }
