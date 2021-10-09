@@ -58,7 +58,7 @@ function initTool(theTool) {
   toolsList[theTool.slug] = theTool;
 }
 
-let activeTool;
+let activeTool = {};
 
 function activateTool(toolSlug) {
   activeTool = toolsList[toolSlug];
@@ -101,6 +101,13 @@ function setPointer(pointerName) {
 }
 
 /////////////////////////////////////////////
+
+function objectHasKey(obj, key) {
+  if( !obj || typeof obj != "object") {
+    return false;
+  }
+  return Object.prototype.hasOwnProperty.call(obj, key);
+}
 
 let pickerEl;
 let settingsEl;
@@ -145,7 +152,7 @@ class ToolSettings extends React.Component {
     chrome.triggerRender();
   }
 
-  setPenSizeInput(e) {
+  setPenSizeInput(event) {
     let value = Number(event.target.value);
     if (value > 0 && value < 1000) {
       activeTool.options.size = value;
@@ -156,8 +163,8 @@ class ToolSettings extends React.Component {
   render() {
     let sx = { padding: "15px" };
 
-    let toolHasColor = activeTool && activeTool.options.hasOwnProperty("color");
-    let toolHasSize = activeTool && activeTool.options.hasOwnProperty("size");
+    let toolHasColor = objectHasKey(activeTool.options, "color");
+    let toolHasSize = objectHasKey(activeTool.options, "size");
     let toolHasActions =
       activeTool &&
       activeTool.getActions &&
@@ -303,7 +310,7 @@ function setColor(color) {
 }
 
 export class ToolBox extends React.Component {
-  onToolChange = (e, tool) => {
+  onToolChange(e, tool) {
     if (!tool) {
       return;
     }
@@ -311,7 +318,7 @@ export class ToolBox extends React.Component {
     activateTool(tool);
 
     chrome.triggerRender();
-  };
+  }
 
   render() {
     return (
