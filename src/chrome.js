@@ -3,6 +3,8 @@ import { undo } from "./undo.js";
 
 import "@fontsource/roboto";
 
+import paper from "paper";
+
 import React from "react";
 import ReactDOM from "react-dom";
 
@@ -11,8 +13,6 @@ import {
   StyledEngineProvider,
   createTheme,
 } from "@mui/material/styles";
-
-import makeStyles from "@mui/styles/makeStyles";
 
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -28,6 +28,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 
 import LayersIcon from "@mui/icons-material/Layers";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -37,7 +38,6 @@ import Paper from "@mui/material/Paper";
 import { UndoCommands } from "./undo.js";
 import { ToolBox } from "./tools.js";
 import { LayerDrawer } from "./layers.js";
-import { TextField, Zoom } from "@mui/material";
 
 function resetCanvas(e, confirmed) {
   closeTopMenu();
@@ -94,7 +94,7 @@ function importDoc(e, confirmed) {
 let confirmAction = null;
 
 let menuEl = null;
-function TopMenu(props) {
+function TopMenu() {
   return (
     <AppBar
       position="fixed"
@@ -199,9 +199,7 @@ function toggleLayers() {
   layersPanelOpen = !layersPanelOpen;
   renderAppChrome();
 }
-function AppChrome(props) {
-  const classes = useStyles();
-
+function AppChrome() {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
@@ -215,10 +213,7 @@ function AppChrome(props) {
 }
 
 const theme = createTheme();
-const useStyles = makeStyles((theme) => {
-  {
-  }
-});
+
 
 function renderAppChrome() {
   ReactDOM.render(<AppChrome />, document.getElementById("appChrome"));
