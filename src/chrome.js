@@ -140,14 +140,20 @@ function TopMenu() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={confirmAction && confirmAction.action}>OK</Button>
           <Button
+            variant="outlined"
             onClick={() => {
               confirmAction = null;
               renderAppChrome();
             }}
           >
             Cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={confirmAction && confirmAction.action}
+          >
+            OK
           </Button>
         </DialogActions>
       </Dialog>
