@@ -39,6 +39,21 @@ import { UndoCommands } from "./undo.js";
 import { ToolBox } from "./tools.js";
 import { LayerDrawer } from "./layers.js";
 
+function aboutDialog() {
+  closeTopMenu();
+
+  confirmAction = {
+    title: "About Draw on Paper",
+    message: "Released under the MIT License. Visit the source repository?",
+    action: () => {
+      window.open('https://github.com/arthurdick/drawonpaper');
+      confirmAction = null;
+      renderAppChrome();
+    },
+  };
+  renderAppChrome();
+}
+
 function resetCanvas(e, confirmed) {
   closeTopMenu();
 
@@ -116,6 +131,7 @@ function TopMenu() {
           open={Boolean(menuEl)}
           onClose={closeTopMenu}
         >
+	  <MenuItem onClick={aboutDialog}>About</MenuItem>
           <MenuItem onClick={uploadReference}>Add Reference</MenuItem>
           <MenuItem onClick={resetCanvas}>Clear</MenuItem>
           <MenuItem onClick={exportDoc}>Export</MenuItem>
